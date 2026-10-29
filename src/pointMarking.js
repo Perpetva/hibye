@@ -1,10 +1,10 @@
-import chromium from 'playwright'
+import { chromium } from 'playwright'
 import dotenv from 'dotenv'
 
 dotenv.config()
 
 const login = process.env.LOGIN
-const senha = process.env.SENHA
+const password = process.env.PASSWORD
 
 const link = process.env.LINK
 
@@ -22,6 +22,24 @@ export default async function pointMarking() {
     })
 
     const page = await context.newPage()
+    await page.goto(link, { waitUntil: 'domcontentloaded' })
 
-    await page.goto(link, { waitUntil: 'domcontentloaded' })   
+    await page.getByTestId('login.emailInput').fill(login)
+    await page.getByTestId('login.passwordInput').fill(password)
+    await page.keyboard.press('Enter')
+
+    // bater o ponto
+    await page.getByText('Marcar Ponto').click()
+    await page.getByRole('button', { name: 'MARCAR PONTO' }).click()
+
+    await delay(4000)
+
+    console.log('Ponto marcado com sucesso em ' + new Date().toLocaleString())
+
+    await context.close()
+    await browser.close()
+}
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
 }
