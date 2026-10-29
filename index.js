@@ -3,7 +3,7 @@ import pointMarking from './src/pointMarking.js'
 
 async function start() {
     await pointMarking()
-}''
+}
 
 cron.schedule('0 8,18 * * 1-5', async () => {
     try {
