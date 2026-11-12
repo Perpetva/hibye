@@ -5,8 +5,6 @@ async function start() {
     await pointMarking()
 }
 
-start()
-
 cron.schedule('0 8,18 * * 1-5', async () => {
     try {
         console.log('Execução agendada iniciada em ' + new Date().toLocaleString())
