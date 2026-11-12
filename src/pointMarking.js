@@ -11,7 +11,7 @@ const link = process.env.LINK
 export default async function pointMarking() {
 
     const browser = await chromium.launch({
-        headless: true,
+        headless: false,
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
     })
 
@@ -32,17 +32,9 @@ export default async function pointMarking() {
         await page.getByTestId('login.emailInput').fill(login)
         await page.getByTestId('login.passwordInput').fill(password)
         await page.keyboard.press('Enter')
+        await delay(10000)
 
-        const pointMarkingLink = page.getByText('Marcar Ponto')
-        try {
-            await pointMarkingLink.waitFor({ state: 'visible', timeout: 30000 })
-        } catch (error) {
-            await saveFailureDiagnostics(page)
-            throw new Error(
-                `A tela de marcação não apareceu após o login (URL: ${page.url()})`,
-                { cause: error },
-            )
-        }
+        const pointMarkingLink = page.locator('div').filter({ hasText: /^Marcar Ponto$/ }).first()
 
         await pointMarkingLink.click()
         await page.getByRole('button', { name: 'MARCAR PONTO', exact: true }).click()
