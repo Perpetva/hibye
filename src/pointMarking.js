@@ -34,14 +34,43 @@ export default async function pointMarking() {
         await page.keyboard.press('Enter')
         await delay(10000)
 
-        const pointMarkingLink = page.locator('div').filter({ hasText: /^Marcar Ponto$/ }).first()
+        const pointMarkingLink = page.getByText('Marcar Ponto', { exact: true })
 
-        await pointMarkingLink.click()
-        await page.getByRole('button', { name: 'MARCAR PONTO', exact: true }).click()
+        await pointMarkingLink.waitFor({
+            state: 'visible',
+            timeout: 60000
+        })
+
+        console.log('Menu Marcar Ponto encontrado');
+
+        await pointMarkingLink.click({
+            timeout: 60000
+        })
+
+        console.log('Botão "MARCAR PONTO" clicado!')
+
+        const button = page.getByRole('button', {
+            name: 'MARCAR PONTO',
+            exact: true
+        });
+
+        await button.waitFor({
+            state: 'visible',
+            timeout: 60000
+        })
+
+        await button.click({
+            timeout: 60000
+        });
 
         await delay(4000)
 
         console.log('Ponto marcado com sucesso em ' + new Date().toLocaleString())
+
+    } catch (e) {
+        await saveFailureDiagnostics(page)
+        throw e
+
     } finally {
         await context.close()
         await browser.close()
