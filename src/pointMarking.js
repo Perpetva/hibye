@@ -49,21 +49,23 @@ export default async function pointMarking() {
 
         console.log('Botão "MARCAR PONTO" clicado!')
 
-        const button = page.getByRole('button', {
+        const buttonPoint = page.getByRole('button', {
             name: 'MARCAR PONTO',
             exact: true
-        });
+        })
 
-        await button.waitFor({
+        await buttonPoint.waitFor({
             state: 'visible',
             timeout: 60000
         })
 
-        await button.click({
+        await buttonPoint.click({
             timeout: 60000
-        });
+        })
 
-        await delay(4000)
+        console.log("Cliquei em marcar, tirei print")
+        await delay(7000)
+        await page.screenshot({ path: `batida_ponto_${timestamp}.png`, fullPage: true, type: 'png' })
 
         console.log('Ponto marcado com sucesso em ' + new Date().toLocaleString())
 
